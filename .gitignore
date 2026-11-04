@@ -7,4 +7,5 @@ next-env.d.ts
 __pycache__/
 .artifacts/
 .agents/
-minna-crawler-10-lessons/minna-crawler/output/html/
+minna-crawler-10-lessons/
+scripts/import-data.mjs
