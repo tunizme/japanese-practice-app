@@ -94,6 +94,10 @@ export default function StudyApp() {
         event.preventDefault();
         if (!event.repeat) setFlipped(previous => !previous);
       }
+      if (event.key === 'ArrowUp') {
+        event.preventDefault();
+        if (!event.repeat && currentCard) play(currentCard);
+      }
       if (event.key === 'ArrowRight' || event.key === 'ArrowLeft') {
         event.preventDefault();
         const direction = event.key === 'ArrowRight' ? 1 : -1;
@@ -172,7 +176,7 @@ export default function StudyApp() {
               </div>
             </div>
             <div className="card-navigation"><button className="button secondary" disabled={cardIndex === 0} onClick={() => moveCard(-1)} aria-label="Thẻ trước"><ArrowLeft size={21}/></button><span aria-live="polite">{cardIndex + 1} / {cards.length}</span><button className="button primary" disabled={cardIndex === cards.length - 1} onClick={() => moveCard(1)} aria-label="Thẻ tiếp theo"><ArrowRight size={21}/></button></div>
-            <p className="keyboard-hint"><kbd>Space</kbd> lật thẻ <span>·</span> <kbd>←</kbd> <kbd>→</kbd> chuyển thẻ</p>
+            <p className="keyboard-hint"><kbd>↑</kbd> nghe phát âm <span>·</span> <kbd>Space</kbd> lật thẻ <span>·</span> <kbd>←</kbd> <kbd>→</kbd> chuyển thẻ</p>
           </section> : <><div className="selection-toolbar"><strong>{progress.selected.length} bài đã chọn</strong><button className="text-button" onClick={() => setProgress(previous => ({ ...previous, selected: previous.selected.length === lessons.length ? [] : lessons.map(lesson => lesson.id) }))}>{progress.selected.length === lessons.length ? 'Bỏ chọn tất cả' : 'Chọn tất cả'}</button></div><div className="lesson-grid">{lessons.map(lesson => <button key={lesson.id} aria-pressed={progress.selected.includes(lesson.id)} className={`lesson-card tone-${(lesson.id - 1) % 4} ${progress.selected.includes(lesson.id) ? 'selected' : ''}`} onClick={() => setProgress(previous => ({ ...previous, selected: previous.selected.includes(lesson.id) ? previous.selected.filter(id => id !== lesson.id) : [...previous.selected, lesson.id] }))}><span className="lesson-number">{String(lesson.id).padStart(2, '0')}</span><span className="selection-check">{progress.selected.includes(lesson.id) && <Check size={15}/>}</span><h3>{titles[lesson.id - 1] || `Bài ${lesson.id}`}</h3><p>{lesson.count} từ vựng · {lesson.audioCount} audio</p></button>)}</div><div className="start-panel"><label><input type="checkbox" checked={random} onChange={event => setRandom(event.target.checked)}/> Trộn ngẫu nhiên</label><button className="button primary" disabled={busy || !progress.selected.length} onClick={() => startFlash()}>{busy ? 'Đang tải…' : 'Bắt đầu học'}<ArrowRight size={18}/></button></div><p className="subtle-note">Hiện có {lessons.length} bài. Các bài tiếp theo sẽ xuất hiện khi dữ liệu được bổ sung.</p></>}</>}
       {view === 'kana' && <><PageHeading tag="TỪ NHỮNG NÉT ĐẦU TIÊN" title="Chữ nhỏ, niềm vui lớn." description="Làm quen từng nhóm chữ, tự tin hơn mỗi ngày."/>{kanaActive && currentKana ? <section className="practice"><div className="practice-top"><button className="text-button" onClick={() => { setKanaActive(false); }}><ArrowLeft size={17}/> Chọn nhóm</button><span>{kanaIndex + 1} / {queue.length} · {mistakes.length} chữ cần ôn</span></div><ProgressBar value={kanaIndex} total={queue.length}/><div className={`kana-question ${feedback || ''}`}>
 <div className="kana-question-header"><span className="pill">CHỮ NÀY ĐỌC LÀ GÌ?</span><button type="button" className="kana-hint-button" onClick={toggleKanaHint} aria-pressed={hintVisible} aria-controls="kana-hint-card" aria-keyshortcuts="Space" title="Space để bật hoặc tắt gợi ý">{hintVisible ? 'Ẩn gợi ý' : 'Gợi ý'}</button></div>
